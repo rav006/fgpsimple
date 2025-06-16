@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import ContactForm from "./components/ContactForm"; // Import ContactForm
+import Quote from './components/Quote';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faTools, 
@@ -101,6 +102,13 @@ export default function Home() {
               Get a Quote
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* Quote Section */}
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+        <div className="container mx-auto px-4 md:px-6">
+          <Quote text="The only way to do great work is to love what you do." author="Steve Jobs" />
         </div>
       </section>
 

@@ -75,7 +75,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Inquiry submitted successfully!', inquiryId: newInquiry?.id }, { status: 201 });
 
   } catch (error) {
-    console.error('Error processing contact form:', error);
-    return NextResponse.json({ message: 'An unexpected error occurred on the server.' }, { status: 500 });
+    // Enhanced error logging for debugging
+    if (error instanceof Error) {
+      console.error('Error processing contact form:', error.message, error.stack);
+    } else {
+      console.error('Unknown error processing contact form:', error);
+    }
+    return NextResponse.json({ message: 'An unexpected error occurred on the server.', error: String(error) }, { status: 500 });
   }
 }

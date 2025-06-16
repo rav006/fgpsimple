@@ -2,17 +2,8 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"args": [
-				"run",
-				"dev"
-			],
-			"command": "npm",
-			"group": "build",
-			"isBackground": true,
-			"label": "Run Next.js development server",
-			"problemMatcher": [
-				"$tsc"
-			],
+			"command": "npm run dev",
+			"label": "Run Next.js dev server",
 			"type": "shell"
 		}
 	]
