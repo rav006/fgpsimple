@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { getDb } from '@/lib/db';
 import { contactInquiries } from '@/lib/schema';
 import { z } from 'zod';
 import nodemailer from 'nodemailer';
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     const { name, email, phone, message, isQuoteRequest } = validation.data;
 
     // Save to database
-    const [newInquiry] = await db.insert(contactInquiries).values({
+    const [newInquiry] = await getDb().insert(contactInquiries).values({
       name,
       email,
       phone: phone || null,
