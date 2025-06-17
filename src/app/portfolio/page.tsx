@@ -80,6 +80,26 @@ const portfolioItems = [
 		category: 'Landscaping & Clearance',
 		type: 'video', // Added type
 	},
+	{
+		id: 'electrical-fuse-box-after',
+		title: 'Electrical Fuse Box (After)',
+		description:
+			'The upgraded and organized electrical fuse box after our professional service.',
+		imageUrl:
+			'/portfolio-assets/electrical/Electrical fuse box - After.jpeg',
+		category: 'Electrical',
+		type: 'image',
+	},
+	{
+		id: 'electrical-fuse-box-before',
+		title: 'Electrical Fuse Box (Before)',
+		description:
+			'The original condition of the electrical fuse box before our improvements.',
+		imageUrl:
+			'/portfolio-assets/electrical/Electrical fuse box - Before.jpeg',
+		category: 'Electrical',
+		type: 'image',
+	},
 ];
 
 export default function PortfolioPage() {
@@ -135,16 +155,6 @@ export default function PortfolioPage() {
 									<p className="text-gray-700 text-sm flex-grow mb-4">
 										{item.description}
 									</p>
-									<a
-										href="#"
-										// Replace with actual link to project details if available
-										className="mt-auto inline-block text-indigo-600 hover:text-indigo-800 font-semibold group"
-									>
-										View Project Details
-										<span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-											&rarr;
-										</span>
-									</a>
 								</div>
 							</div>
 						))}

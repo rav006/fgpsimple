@@ -2,13 +2,14 @@
 
 import { useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast'; // Import toast
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 interface ContactFormData {
   name: string;
   email: string;
   phone?: string;
   message: string;
-  isQuoteRequest: boolean;
 }
 
 export default function ContactForm() {
@@ -17,7 +18,6 @@ export default function ContactForm() {
     email: '',
     phone: '',
     message: '',
-    isQuoteRequest: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,14 +43,14 @@ export default function ContactForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, isQuoteRequest: true }), // Always true
       });
 
       const result = await response.json();
 
       if (response.ok) {
         toast.success(result.message || 'Your message has been sent successfully!', { id: toastId });
-        setFormData({ name: '', email: '', phone: '', message: '', isQuoteRequest: false });
+        setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
         toast.error(result.message || 'An error occurred. Please try again.', { id: toastId });
       }
@@ -68,15 +68,19 @@ export default function ContactForm() {
         <p className="text-gray-600 mt-2">
           We&apos;re here to help. Reach out to us via the form below, or contact us directly:
         </p>
-        <p className="text-gray-700 font-semibold mt-4">
-          Phone: <a href="tel:07846586664" className="text-indigo-600 hover:text-indigo-800">07846 586 664</a>
-        </p>
+        <div className="flex items-center gap-2 text-gray-700 mb-2">
+          <FontAwesomeIcon icon={faPhone} className="text-green-600" />
+          <span>07846 586 664</span>
+        </div>
         <p className="text-gray-600 mt-1">
           We are based in Vauxhall, London
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <h3 className="text-2xl font-semibold text-gray-800 text-center">Send us a Message</h3>
+        <div className="flex items-center gap-2 text-gray-700 mb-2">
+          <FontAwesomeIcon icon={faEnvelope} className="text-blue-600" />
+          <span>Send Us a Message</span>
+        </div>
         
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -90,7 +94,7 @@ export default function ContactForm() {
             aria-required="true" // Added aria-required
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
           />
         </div>
         <div>
@@ -105,7 +109,7 @@ export default function ContactForm() {
             aria-required="true" // Added aria-required
             value={formData.email}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
           />
         </div>
         <div>
@@ -116,7 +120,7 @@ export default function ContactForm() {
             id="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
           />
         </div>
         <div>
@@ -131,21 +135,8 @@ export default function ContactForm() {
             aria-required="true" // Added aria-required
             value={formData.message}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
           />
-        </div>
-        <div className="flex items-center">
-          <input
-            id="isQuoteRequest"
-            name="isQuoteRequest"
-            type="checkbox"
-            checked={formData.isQuoteRequest}
-            onChange={handleChange}
-            className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-          />
-          <label htmlFor="isQuoteRequest" className="ml-2 block text-sm text-gray-900">
-            Request a formal quote
-          </label>
         </div>
         <div>
           <button
