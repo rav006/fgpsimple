@@ -13,6 +13,51 @@ const contactFormSchema = z.object({
   isQuoteRequest: z.boolean().default(false),
 });
 
+type ContactFormData = z.infer<typeof contactFormSchema>;
+
+// Helper function to send email notification
+async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email' | 'phone' | 'message'>) {
+  const { name, email, phone, message } = data;
+  console.log('Attempting to send email notification for quote request.');
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      // Add timeout options
+      connectionTimeout: 10000, // 10 seconds
+      socketTimeout: 10000, // 10 seconds
+    });
+
+    const mailOptions = {
+      from: `\"Fentiman Green Ltd\" <${process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER}>`,
+      to: process.env.QUOTE_REQUEST_EMAIL_RECIPIENT || 'info@fentimangreen.com', // Use env var for recipient
+      subject: 'New Quote Request Received',
+      html: `
+        <h1>New Quote Request</h1>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+        <p><strong>Message:</strong></p>
+        <p>${message.replace(/\\n/g, '<br>')}</p> {/* Sanitize message for HTML */}
+        <hr>
+        <p><em>This is an automated notification from the Fentiman Green Ltd website.</em></p>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Email notification sent successfully.');
+  } catch (emailError) {
+    console.error('Error sending email notification:', emailError);
+    // Email sending failure should not prevent the main operation from succeeding.
+    // Error is logged, but no error is thrown to the caller.
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -28,48 +73,17 @@ export async function POST(request: NextRequest) {
     const [newInquiry] = await db.insert(contactInquiries).values({
       name,
       email,
-      phone: phone || null, // Store as null if empty string
+      phone: phone || null,
       message,
       isQuoteRequest,
-    }).returning(); // Use .returning() if you want the inserted record back
+    }).returning({ id: contactInquiries.id });
 
-    if (isQuoteRequest) {
-      console.log('Quote request received. Attempting to send email notification.');
-      try {
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST,
-          port: Number(process.env.SMTP_PORT),
-          secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          },
-        });
-
-        const mailOptions = {
-          from: `"Fentiman Green Ltd" <${process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER}>`,
-          to: 'info@fentimangreen.com',
-          subject: 'New Quote Request Received',
-          html: `
-            <h1>New Quote Request</h1>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
-            <p><strong>Message:</strong></p>
-            <p>${message}</p>
-            <hr>
-            <p><em>This is an automated notification from the Fentiman Green Ltd website.</em></p>
-          `,
-        };
-
-        await transporter.sendMail(mailOptions);
-        console.log('Email notification sent successfully.');
-
-      } catch (emailError) {
-        console.error('Error sending email notification:', emailError);
-        // Optionally, you could return a specific error or log this more robustly
-        // For now, we'll let the main success response proceed even if email fails
-      }
+    if (isQuoteRequest && newInquiry) {
+      // Send email notification asynchronously (don't await if not critical for response)
+      sendQuoteRequestEmail({ name, email, phone, message }).catch(err => {
+        // Catch errors from the async email sending if not awaited, to prevent unhandled promise rejections
+        console.error("Async email sending failed:", err);
+      });
     }
 
     return NextResponse.json({ message: 'Inquiry submitted successfully!', inquiryId: newInquiry?.id }, { status: 201 });
@@ -81,6 +95,6 @@ export async function POST(request: NextRequest) {
     } else {
       console.error('Unknown error processing contact form:', error);
     }
-    return NextResponse.json({ message: 'An unexpected error occurred on the server.', error: String(error) }, { status: 500 });
+    return NextResponse.json({ message: 'An unexpected error occurred on the server.', errorDetails: String(error) }, { status: 500 });
   }
 }

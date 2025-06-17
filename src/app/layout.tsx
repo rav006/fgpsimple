@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next"; // Import Viewport
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "./components/AuthProvider"; // Import AuthProvider
 import { Toaster } from 'react-hot-toast'; // Import Toaster
 
 const geistSans = Geist({
@@ -17,7 +16,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Fentiman Green Ltd", // Updated title
   description: "Building Maintenance and Cleaning Services", // Updated description
-  viewport: "width=device-width, initial-scale=1", // Added viewport meta tag
+  // viewport: "width=device-width, initial-scale=1", // Moved to viewport export
+};
+
+// Add viewport export
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -30,10 +35,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider> {/* Wrap children with AuthProvider */}
           <Toaster position="bottom-right" toastOptions={{ duration: 5000 }} /> {/* Add Toaster here */}
           {children}
-        </AuthProvider>
       </body>
     </html>
   );

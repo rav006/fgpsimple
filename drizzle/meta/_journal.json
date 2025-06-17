@@ -8,6 +8,13 @@
       "when": 1749853962279,
       "tag": "0000_steady_crystal",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750112957251,
+      "tag": "0001_new_thing",
+      "breakpoints": true
     }
   ]
 }

@@ -82,7 +82,7 @@ const services: Service[] = [
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center">
+    <main className="flex min-h-screen flex-col items-center pt-20"> {/* Added pt-20 for fixed navbar offset */}
       <Navbar />
       {/* Hero Section */}
       <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-r from-green-500 to-blue-500 text-white">
