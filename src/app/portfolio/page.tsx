@@ -1,5 +1,6 @@
 'use client';
 
+import Head from 'next/head';
 import Navbar from '@/app/components/Navbar';
 import Image from 'next/image'; // Import next/image
 
@@ -103,70 +104,170 @@ const portfolioItems = [
 ];
 
 export default function PortfolioPage() {
-	return (
-		<main className="flex min-h-screen flex-col items-center pt-20 bg-gray-100">
-			{/* pt-20 for fixed navbar, bg-gray-100 for page background */}
-			<Navbar />
-			<section className="w-full py-12 md:py-16 lg:py-20">
-				<div className="container mx-auto px-4 md:px-6">
-					<h1 className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800 mb-12">
-						Our Portfolio
-					</h1>
-					<p className="mt-4 mb-12 max-w-[800px] mx-auto text-gray-600 md:text-xl text-center">
-						Discover a selection of our completed projects, showcasing our
-						commitment to quality and excellence in building maintenance, cleaning,
-						and specialized services.
-					</p>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-						{portfolioItems.map((item) => (
-							<div
-								key={item.id}
-								className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-shadow duration-300 hover:shadow-2xl"
-							>
-								<div className="relative w-full h-56">
-									{item.type === 'image' && item.imageUrl && (
-										<Image
-											src={item.imageUrl}
-											alt={`Image for ${item.title}`}
-											layout="fill"
-											objectFit="cover"
-											className="w-full h-full"
-										/>
-									)}
-									{item.type === 'video' && item.videoUrl && (
-										<video
-											src={item.videoUrl}
-											controls
-											className="w-full h-full object-cover"
-											aria-label={`Video for ${item.title}`}
-										>
-											Your browser does not support the video tag.
-										</video>
-									)}
-								</div>
+	const portfolioJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Our Portfolio | Fentiman Green Ltd',
+		description:
+			'Discover a selection of our completed projects, showcasing our commitment to quality and excellence in building maintenance, cleaning, and specialized services.',
+		url: 'https://fentimangreen.co.uk/portfolio',
+		mainEntity: [
+			{
+				'@type': 'CreativeWork',
+				name: 'Fence Painting & Repair',
+				description:
+					'Professional fence painting and repair services to enhance your garden\'s look and longevity.',
+				image:
+					'https://fentimangreen.co.uk/portfolio-assets/garden-landscaping/Fence painting and fix.jpeg',
+				url: 'https://fentimangreen.co.uk/portfolio',
+			},
+			{
+				'@type': 'CreativeWork',
+				name: 'Garden Transformation (After)',
+				description:
+					'The stunning result of a complete garden makeover, showcasing a vibrant and well-organized space.',
+				image:
+					'https://fentimangreen.co.uk/portfolio-assets/garden-landscaping/Garden - After.jpeg',
+				url: 'https://fentimangreen.co.uk/portfolio',
+			},
+		],
+	};
 
-								<div className="p-6 flex flex-col flex-grow">
-									<span className="text-sm font-semibold text-indigo-600 mb-1">
-										{item.category}
-									</span>
-									<h3 className="text-xl font-bold text-gray-900 mb-3">
-										{item.title}
-									</h3>
-									<p className="text-gray-700 text-sm flex-grow mb-4">
-										{item.description}
-									</p>
+	const breadcrumbJsonLd = {
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{
+				'@type': 'ListItem',
+				position: 1,
+				name: 'Home',
+				item: 'https://fentimangreen.co.uk/',
+			},
+			{
+				'@type': 'ListItem',
+				position: 2,
+				name: 'Portfolio',
+				item: 'https://fentimangreen.co.uk/portfolio',
+			},
+		],
+	};
+
+	return (
+		<>
+			<Head>
+				<title>Our Portfolio | Fentiman Green Ltd</title>
+				<meta
+					name="description"
+					content="Discover a selection of our completed projects, showcasing our commitment to quality and excellence in building maintenance, cleaning, and specialized services."
+				/>
+				<meta name="robots" content="index, follow" />
+				<link rel="canonical" href="https://fentimangreen.co.uk/portfolio" />
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify(portfolioJsonLd),
+					}}
+				/>
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify(breadcrumbJsonLd),
+					}}
+				/>
+				{/* Open Graph tags for social sharing */}
+				<meta
+					property="og:title"
+					content="Our Portfolio | Fentiman Green Ltd"
+				/>
+				<meta
+					property="og:description"
+					content="Discover a selection of our completed projects, showcasing our commitment to quality and excellence in building maintenance, cleaning, and specialized services."
+				/>
+				<meta property="og:type" content="website" />
+				<meta property="og:url" content="https://fentimangreen.co.uk/portfolio" />
+				<meta
+					property="og:image"
+					content="https://fentimangreen.co.uk/portfolio-assets/garden-landscaping/Garden - After.jpeg"
+				/>
+				{/* Twitter Card tags */}
+				<meta name="twitter:card" content="summary_large_image" />
+				<meta
+					name="twitter:title"
+					content="Our Portfolio | Fentiman Green Ltd"
+				/>
+				<meta
+					name="twitter:description"
+					content="Discover a selection of our completed projects, showcasing our commitment to quality and excellence in building maintenance, cleaning, and specialized services."
+				/>
+				<meta
+					name="twitter:image"
+					content="https://fentimangreen.co.uk/portfolio-assets/garden-landscaping/Garden - After.jpeg"
+				/>
+			</Head>
+			<main className="flex min-h-screen flex-col items-center pt-20 bg-gray-100">
+				{/* pt-20 for fixed navbar, bg-gray-100 for page background */}
+				<Navbar />
+				<section className="w-full py-12 md:py-16 lg:py-20">
+					<div className="container mx-auto px-4 md:px-6">
+						<h1 className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800 mb-12">
+							Our Portfolio
+						</h1>
+						<p className="mt-4 mb-12 max-w-[800px] mx-auto text-gray-600 md:text-xl text-center">
+							Discover a selection of our completed projects, showcasing our
+							commitment to quality and excellence in building maintenance, cleaning,
+							and specialized services.
+						</p>
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+							{portfolioItems.map((item) => (
+								<div
+									key={item.id}
+									className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-shadow duration-300 hover:shadow-2xl"
+								>
+									<div className="relative w-full h-56">
+										{item.type === 'image' && item.imageUrl && (
+											<Image
+												src={item.imageUrl}
+												alt={`Image for ${item.title}`}
+												layout="fill"
+												objectFit="cover"
+												className="w-full h-full"
+											/>
+										)}
+										{item.type === 'video' && item.videoUrl && (
+											<video
+												src={item.videoUrl}
+												controls
+												className="w-full h-full object-cover"
+												aria-label={`Video for ${item.title}`}
+											>
+												Your browser does not support the video tag.
+											</video>
+										)}
+									</div>
+
+									<div className="p-6 flex flex-col flex-grow">
+										<span className="text-sm font-semibold text-indigo-600 mb-1">
+											{item.category}
+										</span>
+										<h3 className="text-xl font-bold text-gray-900 mb-3">
+											{item.title}
+										</h3>
+										<p className="text-gray-700 text-sm flex-grow mb-4">
+											{item.description}
+										</p>
+									</div>
 								</div>
-							</div>
-						))}
+							))}
+						</div>
 					</div>
-				</div>
-			</section>
-			<footer className="w-full py-8 bg-gray-800 text-white text-center mt-auto">
-				<p>
-					&copy; {new Date().getFullYear()} Fentiman Green Ltd. All rights
-					reserved.
-				</p>
-			</footer>
-		</main>
+				</section>
+				<footer className="w-full py-8 bg-gray-800 text-white text-center mt-auto">
+					<p>
+						&copy; {new Date().getFullYear()} Fentiman Green Ltd. All rights
+						reserved.
+					</p>
+				</footer>
+			</main>
+		</>
 	);
 }
