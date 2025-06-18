@@ -36,7 +36,7 @@ const portfolioItems = [
 	},
 	{
 		id: 'garden-before',
-		title: 'Garden Transformation (Before)',
+		title: 'Garden Transformation (before)',
 		description:
 			'The garden space prior to our renovation and landscaping work.',
 		imageUrl: '/portfolio-assets/garden-landscaping/Garden before.jpeg',
@@ -45,7 +45,7 @@ const portfolioItems = [
 	},
 	{
 		id: 'shed-after',
-		title: 'Shed Renovation (After)',
+		title: 'Shed Renovation (after)',
 		description:
 			'A fully renovated shed, transformed into a functional and attractive garden structure.',
 		imageUrl:
