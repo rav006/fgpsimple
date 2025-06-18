@@ -66,8 +66,8 @@ export default function Navbar() {
       : `${baseLinkStyle} text-gray-300 hover:bg-gray-700 hover:text-white`;
   }
 
-  const servicesHref = pathname === '/' ? '#services' : '/#services';
-  const contactHref = pathname === '/' ? '#contact' : '/#contact';
+  // const servicesHref = pathname === '/' ? '#services' : '/#services';
+  // const contactHref = pathname === '/' ? '#contact' : '/#contact';
 
   function toggleMenu() {
     setIsMenuOpen((open) => !open);
