@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { contactInquiries } from '@/lib/schema';
 import { z } from 'zod';
 import nodemailer from 'nodemailer';
+import fetch from 'node-fetch';
 
 // Define a schema for input validation
 const contactFormSchema = z.object({
@@ -60,8 +61,24 @@ async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const validation = contactFormSchema.safeParse(body);
+    const { recaptchaToken, ...formData } = await request.json();
+
+    // Verify reCAPTCHA token with Google
+    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
+    if (!recaptchaSecret) {
+      return NextResponse.json({ message: 'reCAPTCHA secret key not set on server.' }, { status: 500 });
+    }
+    const recaptchaRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${recaptchaSecret}&response=${recaptchaToken}`,
+    });
+    const recaptchaJson = await recaptchaRes.json();
+    if (!recaptchaJson.success) {
+      return NextResponse.json({ message: 'reCAPTCHA verification failed.' }, { status: 400 });
+    }
+
+    const validation = contactFormSchema.safeParse(formData);
 
     if (!validation.success) {
       return NextResponse.json({ message: "Invalid input.", errors: validation.error.flatten().fieldErrors }, { status: 400 });

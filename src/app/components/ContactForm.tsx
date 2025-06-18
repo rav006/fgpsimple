@@ -3,7 +3,8 @@
 import { useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast'; // Import toast
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface ContactFormData {
   name: string;
@@ -20,6 +21,7 @@ export default function ContactForm() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -51,6 +53,7 @@ export default function ContactForm() {
       if (response.ok) {
         toast.success(result.message || 'Your message has been sent successfully!', { id: toastId });
         setFormData({ name: '', email: '', phone: '', message: '' });
+        setRecaptchaToken(null); // Reset reCAPTCHA token
       } else {
         toast.error(result.message || 'An error occurred. Please try again.', { id: toastId });
       }
@@ -62,92 +65,105 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-lg p-6 bg-white rounded-lg shadow-xl space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800">Contact Us</h2>
-        <p className="text-gray-600 mt-2">
-          We&apos;re here to help. Reach out to us via the form below, or contact us directly:
+    <section className="w-full py-12 md:py-16 lg:py-20 bg-white border-t border-gray-200">
+      <div className="container mx-auto px-4 md:px-6 max-w-2xl">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">Contact Us</h2>
+        <p className="text-gray-600 mb-8 text-center md:text-lg">
+          We’d love to hear from you! Please fill out the form below and our team will get back to you as soon as possible.
         </p>
-        <div className="flex items-center gap-2 text-gray-700 mb-2">
-          <FontAwesomeIcon icon={faPhone} className="text-green-600" />
-          <span>07846 586 664</span>
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex items-center gap-2 justify-center text-gray-700">
+            <FontAwesomeIcon icon={faEnvelope} className="text-blue-600" />
+            <span>info@fentimangreen.com</span>
+          </div>
+          <div className="flex items-center gap-2 justify-center text-gray-700">
+            <FontAwesomeIcon icon={faPhone} className="text-green-600" />
+            <span>01234 567890</span>
+          </div>
         </div>
-        <p className="text-gray-600 mt-1">
-          We are based in Vauxhall, London
-        </p>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex items-center gap-2 text-gray-700 mb-2">
-          <FontAwesomeIcon icon={faEnvelope} className="text-blue-600" />
-          <span>Send Us a Message</span>
-        </div>
-        
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Full Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            required
-            aria-required="true" // Added aria-required
-            value={formData.name}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            required
-            aria-required="true" // Added aria-required
-            value={formData.email}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
-          />
-        </div>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
-          <input
-            type="tel"
-            name="phone"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
-          />
-        </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-            Message <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            name="message"
-            id="message"
-            rows={4}
-            required
-            aria-required="true" // Added aria-required
-            value={formData.message}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
-          />
-        </div>
-        <div>
+        <form
+          className="bg-gray-50 rounded-xl shadow-md p-6 flex flex-col gap-4"
+          autoComplete="off"
+          onSubmit={handleSubmit}
+        >
+          <div>
+            <label htmlFor="name" className="block text-gray-700 font-semibold mb-1">
+              Full Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              aria-required="true" // Added aria-required
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              placeholder="Your Name"
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-gray-700 font-semibold mb-1">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              aria-required="true" // Added aria-required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              placeholder="you@email.com"
+            />
+          </div>
+          <div>
+            <label htmlFor="phone" className="block text-gray-700 font-semibold mb-1">
+              Phone Number (Optional)
+            </label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              placeholder="Phone Number"
+            />
+          </div>
+          <div>
+            <label htmlFor="message" className="block text-gray-700 font-semibold mb-1">
+              Message <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              aria-required="true" // Added aria-required
+              value={formData.message}
+              onChange={handleChange}
+              rows={5}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-vertical"
+              placeholder="How can we help you?"
+            />
+          </div>
+          <div className="flex justify-center my-2">
+            <ReCAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+              onChange={(token: string | null) => setRecaptchaToken(token)}
+              theme="light"
+            />
+          </div>
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            disabled={!recaptchaToken}
           >
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </section>
   );
 }
