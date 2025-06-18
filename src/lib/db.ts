@@ -9,9 +9,13 @@ export function getDb() {
   if (!connectionString) {
     throw new Error('DATABASE_URL environment variable is not set or empty');
   }
+
   if (!db) {
-    const pool = new Pool({ connectionString });
+    const pool = new Pool({
+      connectionString,
+    });
     db = drizzle(pool, { schema });
   }
+
   return db;
 }

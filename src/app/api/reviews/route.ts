@@ -11,9 +11,14 @@ const reviewSchema = z.object({
 });
 
 export async function GET() {
-  const db = getDb();
-  const allReviews = await db.select().from(reviews).orderBy(desc(reviews.createdAt));
-  return NextResponse.json(allReviews);
+  try {
+    const db = getDb();
+    const allReviews = await db.select().from(reviews).orderBy(desc(reviews.createdAt));
+    return NextResponse.json(allReviews);
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return NextResponse.json({ message: "Failed to fetch reviews", error: String(error) }, { status: 500 });
+  }
 }
 
 export async function POST(request: NextRequest) {

@@ -228,8 +228,9 @@ export default function PortfolioPage() {
 											<Image
 												src={item.imageUrl}
 												alt={`Image for ${item.title}`}
-												layout="fill"
-												objectFit="cover"
+												fill
+												style={{ objectFit: 'cover' }}
+												sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 												className="w-full h-full"
 											/>
 										)}
