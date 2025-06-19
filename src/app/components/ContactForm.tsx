@@ -6,12 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import Head from 'next/head';
 
-// @ts-ignore
-const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || (typeof window !== 'undefined' ? (window as any).NEXT_PUBLIC_RECAPTCHA_SITE_KEY : '');
+// @ts-expect-error
+const RECAPTCHA_SITE_KEY: string = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || (typeof window !== 'undefined' ? (window as { NEXT_PUBLIC_RECAPTCHA_SITE_KEY?: string }).NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '' : '');
 
 declare global {
   interface Window {
-    grecaptcha: any;
+    grecaptcha: {
+      execute(siteKey: string, options: { action: string }): Promise<string>;
+    };
   }
 }
 
