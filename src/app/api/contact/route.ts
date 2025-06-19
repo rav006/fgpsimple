@@ -62,20 +62,28 @@ async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email
 export async function POST(request: NextRequest) {
   try {
     const { recaptchaToken, ...formData } = await request.json();
-
+    console.log('Received recaptchaToken:', recaptchaToken);
     // Verify reCAPTCHA token with Google
     const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
     if (!recaptchaSecret) {
+      console.log('Missing RECAPTCHA_SECRET_KEY in environment');
       return NextResponse.json({ message: 'reCAPTCHA secret key not set on server.' }, { status: 500 });
     }
-    const recaptchaRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${recaptchaSecret}&response=${recaptchaToken}`,
-    });
-    const recaptchaJson = await recaptchaRes.json() as { success: boolean; score?: number; action?: string; [key: string]: unknown };
-    console.log('reCAPTCHA response:', recaptchaJson);
+    let recaptchaRes, recaptchaJson;
+    try {
+      recaptchaRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `secret=${recaptchaSecret}&response=${recaptchaToken}`,
+      });
+      recaptchaJson = await recaptchaRes.json() as { success: boolean; score?: number; action?: string; [key: string]: unknown };
+      console.log('reCAPTCHA response:', recaptchaJson);
+    } catch (err) {
+      console.error('Error during reCAPTCHA fetch/parse:', err);
+      return NextResponse.json({ message: 'Error verifying reCAPTCHA.' }, { status: 500 });
+    }
     if (!recaptchaJson.success || (typeof recaptchaJson.score === 'number' && recaptchaJson.score < 0.3)) {
+      console.log('Failing due to reCAPTCHA:', recaptchaJson);
       return NextResponse.json({ message: 'reCAPTCHA verification failed or low score.' }, { status: 400 });
     }
 
