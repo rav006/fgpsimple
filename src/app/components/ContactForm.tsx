@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import Head from 'next/head';
 
-// @ts-expect-error
+// @ts-expect-error: process.env is not statically typed for NEXT_PUBLIC_RECAPTCHA_SITE_KEY, fallback for browser
 const RECAPTCHA_SITE_KEY: string = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || (typeof window !== 'undefined' ? (window as { NEXT_PUBLIC_RECAPTCHA_SITE_KEY?: string }).NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '' : '');
 
 declare global {
