@@ -50,10 +50,22 @@ async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email
       `,
     };
 
-    await transporter.sendMail(mailOptions);
-    console.log('Email notification sent successfully.');
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email notification sent successfully. MessageId:', info.messageId);
+    if (info.rejected && info.rejected.length > 0) {
+      console.error('Email was rejected for:', info.rejected);
+    }
+    if (info.pending && info.pending.length > 0) {
+      console.warn('Email is pending for:', info.pending);
+    }
+    if (info.accepted && info.accepted.length > 0) {
+      console.log('Email accepted for:', info.accepted);
+    }
   } catch (emailError) {
     console.error('Error sending email notification:', emailError);
+    if (emailError && typeof emailError === 'object' && 'response' in emailError) {
+      console.error('SMTP error response:', (emailError as any).response);
+    }
     // Email sending failure should not prevent the main operation from succeeding.
     // Error is logged, but no error is thrown to the caller.
   }
