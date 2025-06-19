@@ -64,7 +64,8 @@ async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email
   } catch (emailError) {
     console.error('Error sending email notification:', emailError);
     if (emailError && typeof emailError === 'object' && 'response' in emailError) {
-      console.error('SMTP error response:', (emailError as any).response);
+      const smtpError = emailError as { response?: unknown };
+      console.error('SMTP error response:', smtpError.response);
     }
     // Email sending failure should not prevent the main operation from succeeding.
     // Error is logged, but no error is thrown to the caller.
