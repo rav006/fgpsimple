@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { contactInquiries } from '@/lib/schema';
 import { z } from 'zod';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import fetch from 'node-fetch';
 
 // Define a schema for input validation
@@ -16,27 +16,15 @@ const contactFormSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
-// Helper function to send email notification
+// Helper function to send email notification using Resend
 async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email' | 'phone' | 'message'>) {
   const { name, email, phone, message } = data;
-  console.log('Attempting to send email notification for quote request.');
+  console.log('Attempting to send email notification for quote request (Resend).');
   try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-      // Add timeout options
-      connectionTimeout: 10000, // 10 seconds
-      socketTimeout: 10000, // 10 seconds
-    });
-
-    const mailOptions = {
-      from: `\"Fentiman Green Ltd\" <${process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER}>`,
-      to: process.env.QUOTE_REQUEST_EMAIL_RECIPIENT || 'info@fentimangreen.com', // Use env var for recipient
+    const resend = new Resend(process.env.RESEND_API_KEY as string);
+    const { data: result, error } = await resend.emails.send({
+      from: 'info@fentimangreen.com', // Must be a verified sender/domain in Resend
+      to: ['info@fentimangreen.com'],
       subject: 'New Quote Request Received',
       html: `
         <h1>New Quote Request</h1>
@@ -44,31 +32,18 @@ async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email
         <p><strong>Email:</strong> ${email}</p>
         ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
         <p><strong>Message:</strong></p>
-        <p>${message.replace(/\\n/g, '<br>')}</p> {/* Sanitize message for HTML */}
+        <p>${message.replace(/\n/g, '<br>')}</p>
         <hr>
         <p><em>This is an automated notification from the Fentiman Green Ltd website.</em></p>
       `,
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email notification sent successfully. MessageId:', info.messageId);
-    if (info.rejected && info.rejected.length > 0) {
-      console.error('Email was rejected for:', info.rejected);
+    });
+    if (error) {
+      console.error('Resend email error:', error);
+    } else {
+      console.log('Resend email sent:', result);
     }
-    if (info.pending && info.pending.length > 0) {
-      console.warn('Email is pending for:', info.pending);
-    }
-    if (info.accepted && info.accepted.length > 0) {
-      console.log('Email accepted for:', info.accepted);
-    }
-  } catch (emailError) {
-    console.error('Error sending email notification:', emailError);
-    if (emailError && typeof emailError === 'object' && 'response' in emailError) {
-      const smtpError = emailError as { response?: unknown };
-      console.error('SMTP error response:', smtpError.response);
-    }
-    // Email sending failure should not prevent the main operation from succeeding.
-    // Error is logged, but no error is thrown to the caller.
+  } catch (err) {
+    console.error('Unexpected error sending email with Resend:', err);
   }
 }
 
@@ -78,7 +53,7 @@ export async function POST(request: NextRequest) {
     const { recaptchaToken, ...formData } = await request.json();
     console.log('Received recaptchaToken:', recaptchaToken);
     // Verify reCAPTCHA token with Google
-    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
+    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY as string;
     if (!recaptchaSecret) {
       console.log('Missing RECAPTCHA_SECRET_KEY in environment');
       return NextResponse.json({ message: 'reCAPTCHA secret key not set on server.' }, { status: 500 });
