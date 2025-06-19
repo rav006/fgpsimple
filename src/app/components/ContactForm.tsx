@@ -56,6 +56,7 @@ export default function ContactForm() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
+    console.log('Submitting contact form', formData);
     const toastId = toast.loading('Sending your message...');
     try {
       // Get the reCAPTCHA v3 token
@@ -63,6 +64,7 @@ export default function ContactForm() {
         RECAPTCHA_SITE_KEY,
         { action: 'submit' }
       );
+      console.log('reCAPTCHA token generated:', token);
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -71,6 +73,7 @@ export default function ContactForm() {
         body: JSON.stringify({ ...formData, isQuoteRequest: true, recaptchaToken: token }),
       });
       const result = await response.json();
+      console.log('API response:', result);
       if (response.ok) {
         toast.success(result.message || 'Your message has been sent successfully!', { id: toastId });
         setFormData({ name: '', email: '', phone: '', message: '' });
