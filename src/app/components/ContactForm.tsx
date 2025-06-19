@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import Head from 'next/head';
 
-const RECAPTCHA_SITE_KEY: string = (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as any as string) || (typeof window !== 'undefined' ? (window as { NEXT_PUBLIC_RECAPTCHA_SITE_KEY?: string }).NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '' : '');
+const RECAPTCHA_SITE_KEY: string = (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as unknown as string) || (typeof window !== 'undefined' ? ((window as unknown) as { NEXT_PUBLIC_RECAPTCHA_SITE_KEY?: string }).NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '' : '');
 
 declare global {
   interface Window {
