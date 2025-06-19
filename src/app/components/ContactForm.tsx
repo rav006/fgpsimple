@@ -110,13 +110,18 @@ export default function ContactForm() {
             We’d love to hear from you! Please fill out the form below and our team will get back to you as soon as possible.
           </p>
           <div className="flex flex-col gap-4 mb-8">
-            <div className="flex items-center gap-2 justify-center text-gray-700">
-              <FontAwesomeIcon icon={faEnvelope} className="text-blue-600" />
-              <span>info@fentimangreen.com</span>
-            </div>
-            <div className="flex items-center gap-2 justify-center text-gray-700">
-              <FontAwesomeIcon icon={faPhone} className="text-green-600" />
-              <span>01234 567890</span>
+            {/* Calling Card Modal */}
+            <div className="mx-auto mb-4">
+              <div className="bg-white rounded-xl shadow-lg px-6 py-4 flex flex-col items-center border border-gray-200 max-w-xs">
+                <div className="flex items-center gap-2 mb-2">
+                  <FontAwesomeIcon icon={faPhone} className="text-green-600" />
+                  <a href="tel:07846586664" className="text-lg font-semibold text-gray-800 hover:text-green-700">07846586664</a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FontAwesomeIcon icon={faEnvelope} className="text-blue-600" />
+                  <a href="mailto:info@fentimangreen.com" className="text-lg font-semibold text-gray-800 hover:text-blue-700">info@fentimangreen.com</a>
+                </div>
+              </div>
             </div>
           </div>
           <form
