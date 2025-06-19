@@ -1,11 +1,19 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import toast from 'react-hot-toast'; // Import toast
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
-import ReCAPTCHA from 'react-google-recaptcha';
 import Head from 'next/head';
+
+// @ts-ignore
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || (typeof window !== 'undefined' ? (window as any).NEXT_PUBLIC_RECAPTCHA_SITE_KEY : '');
+
+declare global {
+  interface Window {
+    grecaptcha: any;
+  }
+}
 
 interface ContactFormData {
   name: string;
@@ -22,7 +30,17 @@ export default function ContactForm() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Load reCAPTCHA v3 script
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -37,24 +55,24 @@ export default function ContactForm() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
-
     const toastId = toast.loading('Sending your message...');
-
     try {
+      // Get the reCAPTCHA v3 token
+      const token = await window.grecaptcha.execute(
+        RECAPTCHA_SITE_KEY,
+        { action: 'submit' }
+      );
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, isQuoteRequest: true }), // Always true
+        body: JSON.stringify({ ...formData, isQuoteRequest: true, recaptchaToken: token }),
       });
-
       const result = await response.json();
-
       if (response.ok) {
         toast.success(result.message || 'Your message has been sent successfully!', { id: toastId });
         setFormData({ name: '', email: '', phone: '', message: '' });
-        setRecaptchaToken(null); // Reset reCAPTCHA token
       } else {
         toast.error(result.message || 'An error occurred. Please try again.', { id: toastId });
       }
@@ -167,17 +185,9 @@ export default function ContactForm() {
                 placeholder="How can we help you?"
               />
             </div>
-            <div className="flex justify-center my-2">
-              <ReCAPTCHA
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-                onChange={(token: string | null) => setRecaptchaToken(token)}
-                theme="light"
-              />
-            </div>
             <button
               type="submit"
               className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              disabled={!recaptchaToken}
             >
               {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>

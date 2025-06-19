@@ -73,9 +73,9 @@ export async function POST(request: NextRequest) {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: `secret=${recaptchaSecret}&response=${recaptchaToken}`,
     });
-    const recaptchaJson = await recaptchaRes.json() as { success: boolean };
-    if (!recaptchaJson.success) {
-      return NextResponse.json({ message: 'reCAPTCHA verification failed.' }, { status: 400 });
+    const recaptchaJson = await recaptchaRes.json() as { success: boolean; score?: number; action?: string };
+    if (!recaptchaJson.success || (typeof recaptchaJson.score === 'number' && recaptchaJson.score < 0.5)) {
+      return NextResponse.json({ message: 'reCAPTCHA verification failed or low score.' }, { status: 400 });
     }
 
     const validation = contactFormSchema.safeParse(formData);
