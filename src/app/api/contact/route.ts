@@ -60,6 +60,7 @@ async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email
 }
 
 export async function POST(request: NextRequest) {
+  console.log('Contact API called');
   try {
     const { recaptchaToken, ...formData } = await request.json();
     console.log('Received recaptchaToken:', recaptchaToken);
@@ -115,7 +116,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Inquiry submitted successfully!', inquiryId: newInquiry?.id }, { status: 201 });
 
   } catch (error) {
-    // Enhanced error logging for debugging
+    console.error('Contact API error:', error);
     if (error instanceof Error) {
       console.error('Error processing contact form:', error.message, error.stack);
     } else {
