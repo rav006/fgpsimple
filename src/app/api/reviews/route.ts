@@ -1,8 +1,8 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
-import { reviews } from '@/lib/schema';
-import { z } from 'zod';
-import { desc } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from "next/server";
+import { getDb } from "@/lib/db";
+import { reviews } from "@/lib/schema";
+import { z } from "zod";
+import { desc } from "drizzle-orm";
 
 const reviewSchema = z.object({
   name: z.string().min(2).max(255),
@@ -13,11 +13,17 @@ const reviewSchema = z.object({
 export async function GET() {
   try {
     const db = getDb();
-    const allReviews = await db.select().from(reviews).orderBy(desc(reviews.createdAt));
+    const allReviews = await db
+      .select()
+      .from(reviews)
+      .orderBy(desc(reviews.createdAt));
     return NextResponse.json(allReviews);
   } catch (error) {
     console.error("Error fetching reviews:", error);
-    return NextResponse.json({ message: "Failed to fetch reviews", error: String(error) }, { status: 500 });
+    return NextResponse.json(
+      { message: "Failed to fetch reviews", error: String(error) },
+      { status: 500 },
+    );
   }
 }
 
@@ -26,13 +32,25 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validation = reviewSchema.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json({ message: 'Invalid input.', errors: validation.error.flatten().fieldErrors }, { status: 400 });
+      return NextResponse.json(
+        {
+          message: "Invalid input.",
+          errors: validation.error.flatten().fieldErrors,
+        },
+        { status: 400 },
+      );
     }
     const { name, rating, comment } = validation.data;
     const db = getDb();
-    const [newReview] = await db.insert(reviews).values({ name, rating, comment }).returning();
+    const [newReview] = await db
+      .insert(reviews)
+      .values({ name, rating, comment })
+      .returning();
     return NextResponse.json(newReview, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ message: 'Server error', error: String(error) }, { status: 500 });
+    return NextResponse.json(
+      { message: "Server error", error: String(error) },
+      { status: 500 },
+    );
   }
 }
