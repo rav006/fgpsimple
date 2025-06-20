@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect, type FormEvent } from "react";
-import toast from "react-hot-toast"; // Import toast
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
+import toast from "react-hot-toast";
 import Head from "next/head";
 
 const RECAPTCHA_SITE_KEY: string =
@@ -139,20 +137,32 @@ export default function ContactForm() {
         />
       </Head>
       <section className="w-full py-12 md:py-16 lg:py-20 bg-white border-t border-gray-200">
-        <div className="container mx-auto px-4 md:px-6 max-w-2xl">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
-            Contact Us
+        <div className="max-w-2xl mx-auto my-12 p-6 bg-white rounded-xl shadow">
+          <h2 className="text-2xl font-bold mb-4 text-gray-900 text-center">
+            Get in Touch
           </h2>
           <p className="text-gray-700 mb-8 text-center md:text-lg">
-            We’d love to hear from you! Please fill out the form below and our
-            team will get back to you as soon as possible.
+            Have a question or need a quote? Fill out the form below, and our team
+            will get back to you as soon as possible.
           </p>
           <div className="flex flex-col gap-4 mb-8">
-            {/* Calling Card Modal */}
             <div className="mx-auto mb-4">
               <div className="bg-white rounded-xl shadow-lg px-6 py-4 flex flex-col items-center border border-gray-200 max-w-xs">
                 <div className="flex items-center gap-2 mb-2">
-                  <FontAwesomeIcon icon={faPhone} className="text-green-600" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6 text-green-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.25 6.75c0-1.243 1.007-2.25 2.25-2.25h2.086c.51 0 .998.195 1.366.547l1.32 1.32a2.25 2.25 0 01.547 1.366v2.086a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75zM17.25 17.25a2.25 2.25 0 002.25-2.25v-2.086a2.25 2.25 0 00-.547-1.366l-1.32-1.32a2.25 2.25 0 00-1.366-.547h-2.086a2.25 2.25 0 00-2.25 2.25v2.086a2.25 2.25 0 002.25 2.25h2.086z"
+                    />
+                  </svg>
                   <a
                     href="tel:07846586664"
                     className="text-lg font-semibold text-gray-800 hover:text-green-700"
@@ -161,16 +171,45 @@ export default function ContactForm() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    className="text-blue-600"
-                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6 text-blue-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15A2.25 2.25 0 002.25 6.75m19.5 0v.243a2.25 2.25 0 01-.659 1.591l-7.091 7.091a2.25 2.25 0 01-3.182 0L2.909 8.584A2.25 2.25 0 012.25 6.993V6.75"
+                    />
+                  </svg>
                   <a
                     href="mailto:info@fentimangreen.com"
                     className="text-lg font-semibold text-gray-800 hover:text-blue-700"
                   >
                     info@fentimangreen.com
                   </a>
+                </div>
+                <div className="flex items-center gap-2 mt-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6 text-pink-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 21c-4.418 0-8-4.03-8-9.001C4 7.03 7.582 3 12 3s8 4.03 8 8.999C20 16.97 16.418 21 12 21zm0-9.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+                    />
+                  </svg>
+                  <span className="text-lg font-semibold text-gray-800">
+                    Vauxhall, London SW8 1PX
+                  </span>
                 </div>
               </div>
             </div>
@@ -180,6 +219,9 @@ export default function ContactForm() {
             autoComplete="off"
             onSubmit={handleSubmit}
           >
+            <h3 className="text-xl font-bold mb-2 text-gray-900">
+              Send us a message
+            </h3>
             <div>
               <label
                 htmlFor="name"
