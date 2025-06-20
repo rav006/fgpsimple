@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { contactInquiries } from '@/lib/schema';
-import { desc, eq } from 'drizzle-orm/sql/expressions';
+import { reviews } from '@/lib/schema';
+import { eq } from 'drizzle-orm/sql/expressions';
 
 export async function GET() {
-  const inquiries = await getDb()
-    .select()
-    .from(contactInquiries)
-    .orderBy(desc(contactInquiries.createdAt));
-  return NextResponse.json({ inquiries });
+  const all = await getDb().select().from(reviews).orderBy(reviews.createdAt);
+  return NextResponse.json({ reviews: all });
 }
 
 export async function DELETE(request: NextRequest) {
   const id = Number(request.nextUrl.searchParams.get('id'));
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
-  await getDb().delete(contactInquiries).where(eq(contactInquiries.id, id));
+  await getDb().delete(reviews).where(eq(reviews.id, id));
   return NextResponse.json({ success: true });
 }
 
@@ -22,14 +19,10 @@ export async function PUT(request: NextRequest) {
   const id = Number(request.nextUrl.searchParams.get('id'));
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   const data = await request.json();
-  await getDb()
-    .update(contactInquiries)
-    .set({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      message: data.message,
-    })
-    .where(eq(contactInquiries.id, id));
+  await getDb().update(reviews).set({
+    name: data.name,
+    rating: Number(data.rating),
+    comment: data.comment,
+  }).where(eq(reviews.id, id));
   return NextResponse.json({ success: true });
 }

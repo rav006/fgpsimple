@@ -82,45 +82,51 @@ const services: Service[] = [
   },
 ];
 
-export default function Home() {
-  const businessJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Fentiman Green Ltd",
-    "image": "https://fentimangreen.co.uk/your-logo.png",
-    "@id": "https://fentimangreen.co.uk/",
-    "url": "https://fentimangreen.co.uk/",
-    "telephone": "01234 567890",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Your Street Address",
-      "addressLocality": "Your City",
-      "postalCode": "Your Postal Code",
-      "addressCountry": "GB"
-    },
-    "description": "Fentiman Green Ltd provides comprehensive building maintenance, cleaning, and landscaping services in the UK.",
-    "priceRange": "££",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "01234 567890",
-      "contactType": "customer service",
-      "areaServed": "GB"
-    }
-  };
-
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
+export const metadata = {
+  title: 'Fentiman Green Ltd | Building Maintenance & Landscaping',
+  description: 'Fentiman Green Ltd offers comprehensive building maintenance, cleaning, and landscaping services in London. Get a quote today!',
+  openGraph: {
+    title: 'Fentiman Green Ltd | Building Maintenance & Landscaping',
+    description: 'Fentiman Green Ltd offers comprehensive building maintenance, cleaning, and landscaping services in London. Get a quote today!',
+    url: 'https://fentimangreen.co.uk/',
+    images: [
       {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://fentimangreen.co.uk/"
-      }
-    ]
-  };
+        url: '/portfolio-assets/garden-landscaping/Garden - After.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Fentiman Green Ltd garden landscaping',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fentiman Green Ltd | Building Maintenance & Landscaping',
+    description: 'Fentiman Green Ltd offers comprehensive building maintenance, cleaning, and landscaping services in London. Get a quote today!',
+  },
+  other: {
+    'script[type="application/ld+json"]': `{
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Fentiman Green Ltd",
+      "url": "https://fentimangreen.co.uk/",
+      "logo": "https://fentimangreen.co.uk/portfolio-assets/garden-landscaping/Garden%20-%20After.jpeg",
+      "description": "Fentiman Green Ltd offers comprehensive building maintenance, cleaning, and landscaping services in London.",
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "telephone": "+44-20-1234-5678",
+        "contactType": "customer service",
+        "email": "info@fentimangreen.co.uk"
+      }],
+      "sameAs": [
+        "https://www.facebook.com/fentimangreen",
+        "https://www.instagram.com/fentimangreen"
+      ]
+    }`
+  }
+};
 
+export default function Home() {
   return (
     <>
       <Head>
@@ -128,8 +134,6 @@ export default function Home() {
         <meta name="description" content="Fentiman Green Ltd provides comprehensive building maintenance, cleaning, and landscaping services in the UK. Get a quote today!" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://fentimangreen.co.uk/" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
         {/* Open Graph tags for social sharing */}
         <meta property="og:title" content="Fentiman Green Ltd | Building Maintenance & Cleaning Services" />
         <meta property="og:description" content="Fentiman Green Ltd provides comprehensive building maintenance, cleaning, and landscaping services in the UK. Get a quote today!" />

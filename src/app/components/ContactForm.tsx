@@ -109,7 +109,7 @@ export default function ContactForm() {
       <section className="w-full py-12 md:py-16 lg:py-20 bg-white border-t border-gray-200">
         <div className="container mx-auto px-4 md:px-6 max-w-2xl">
           <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">Contact Us</h2>
-          <p className="text-gray-600 mb-8 text-center md:text-lg">
+          <p className="text-gray-700 mb-8 text-center md:text-lg">
             We’d love to hear from you! Please fill out the form below and our team will get back to you as soon as possible.
           </p>
           <div className="flex flex-col gap-4 mb-8">

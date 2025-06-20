@@ -1,5 +1,3 @@
-'use client';
-
 import Head from 'next/head';
 import Navbar from '@/app/components/Navbar';
 import Image from 'next/image'; // Import next/image
@@ -102,6 +100,39 @@ const portfolioItems = [
 		type: 'image',
 	},
 ];
+
+export const metadata = {
+	title: 'Portfolio | Fentiman Green Ltd',
+	description: 'See our portfolio of building maintenance, cleaning, and landscaping projects in London.',
+	openGraph: {
+		title: 'Portfolio | Fentiman Green Ltd',
+		description: 'See our portfolio of building maintenance, cleaning, and landscaping projects in London.',
+		url: 'https://fentimangreen.co.uk/portfolio',
+		images: [
+			{
+				url: '/portfolio-assets/garden-landscaping/Garden - After.jpeg',
+				width: 1200,
+				height: 630,
+				alt: 'Fentiman Green Ltd garden landscaping',
+			},
+		],
+		type: 'website',
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'Portfolio | Fentiman Green Ltd',
+		description: 'See our portfolio of building maintenance, cleaning, and landscaping projects in London.',
+	},
+	other: {
+		'script[type="application/ld+json"]': `{
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Portfolio | Fentiman Green Ltd",
+      "description": "See our portfolio of building maintenance, cleaning, and landscaping projects in London.",
+      "url": "https://fentimangreen.co.uk/portfolio"
+    }`,
+	},
+};
 
 export default function PortfolioPage() {
 	const portfolioJsonLd = {

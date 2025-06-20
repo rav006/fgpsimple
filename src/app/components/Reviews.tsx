@@ -57,7 +57,7 @@ export default function Reviews() {
 
   return (
     <section className="max-w-2xl mx-auto my-12 p-6 bg-white rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-900">Customer Reviews</h2>
       <form onSubmit={handleSubmit} className="mb-8 flex flex-col gap-4">
         <input
           name="name"
@@ -65,7 +65,7 @@ export default function Reviews() {
           onChange={handleChange}
           placeholder="Your Name"
           required
-          className="border rounded px-3 py-2"
+          className="border rounded px-3 py-2 text-gray-900"
         />
         <label htmlFor="rating" className="sr-only">Rating</label>
         <select
@@ -73,10 +73,12 @@ export default function Reviews() {
           name="rating"
           value={form.rating}
           onChange={handleSelectChange}
-          className="border rounded px-3 py-2"
+          className="border rounded px-3 py-2 text-gray-900"
         >
           {[5,4,3,2,1].map((n) => (
-            <option key={n} value={n}>{n} Star{n > 1 ? 's' : ''}</option>
+            <option key={n} value={n}>
+              {"⭐".repeat(n)}{"☆".repeat(5 - n)}
+            </option>
           ))}
         </select>
         <textarea
@@ -86,7 +88,7 @@ export default function Reviews() {
           placeholder="Your review..."
           required
           minLength={5}
-          className="border rounded px-3 py-2"
+          className="border rounded px-3 py-2 text-gray-900"
         />
         <button
           type="submit"
@@ -99,13 +101,13 @@ export default function Reviews() {
         {success && <p className="text-green-600">Thank you for your review!</p>}
       </form>
       <div className="space-y-6">
-        {reviews.length === 0 && <p>No reviews yet. Be the first to leave one!</p>}
+        {reviews.length === 0 && <p className="text-gray-700 font-medium">No reviews yet. Be the first to leave one!</p>}
         {reviews.map((r) => (
           <div key={r.id} className="border-b pb-4">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold">{r.name}</span>
               <span className="text-yellow-500">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
-              <span className="text-xs text-gray-500 ml-auto">{new Date(r.createdAt).toLocaleDateString()}</span>
+              <span className="text-xs text-gray-700 ml-auto">{new Date(r.createdAt).toLocaleDateString()}</span>
             </div>
             <p className="text-gray-700">{r.comment}</p>
           </div>

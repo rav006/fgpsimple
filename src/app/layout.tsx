@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Fentiman Green Ltd", // Updated title
   description: "Building Maintenance and Cleaning Services", // Updated description
+  metadataBase: new URL("https://fentimangreen.co.uk"),
   // viewport: "width=device-width, initial-scale=1", // Moved to viewport export
 };
 

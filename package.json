@@ -19,6 +19,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/material": "^7.1.2",
+    "@next/bundle-analyzer": "^15.3.4",
     "@types/nodemailer": "^6.4.17",
     "@types/pg": "^8.15.4",
     "bcryptjs": "^3.0.2",
@@ -34,6 +35,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-google-recaptcha": "^3.1.0",
+    "react-helmet": "^6.1.0",
     "react-hot-toast": "^2.5.2",
     "resend": "^4.6.0",
     "zod": "^3.25.64"
@@ -45,6 +47,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-google-recaptcha": "^2.1.9",
+    "@types/react-helmet": "^6.1.11",
     "dotenv-cli": "^7.4.2",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",

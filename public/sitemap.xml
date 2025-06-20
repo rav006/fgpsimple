@@ -16,4 +16,5 @@
     <loc>https://fentimangreen.co.uk/#contact</loc>
     <priority>0.7</priority>
   </url>
+  <!-- Add more important public pages here as needed. Admin page is intentionally excluded. -->
 </urlset>
