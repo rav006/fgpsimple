@@ -20,5 +20,13 @@ export const reviews = pgTable('reviews', {
   createdAt: timestamp('created_at').default(sql`now()`),
 });
 
+export const adminUsers = pgTable('admin_users', {
+  id: serial('id').primaryKey(),
+  username: varchar('username', { length: 255 }).notNull().unique(),
+  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at').default(sql`now()`),
+});
+
 export type ContactInquiry = InferSelectModel<typeof contactInquiries>;
 export type Review = InferSelectModel<typeof reviews>;
+export type AdminUser = InferSelectModel<typeof adminUsers>;

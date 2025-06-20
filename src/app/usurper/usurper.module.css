@@ -1,0 +1,21 @@
+.container {
+  padding: 32px;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 24px;
+}
+.tr {
+  border-bottom: 1px solid #ccc;
+}
+.messageCell {
+  max-width: 300px;
+  word-break: break-word;
+}
+.deleteBtn {
+  color: red;
+  cursor: pointer;
+  background: none;
+  border: none;
+}

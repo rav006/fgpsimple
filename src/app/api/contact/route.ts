@@ -23,8 +23,8 @@ async function sendQuoteRequestEmail(data: Pick<ContactFormData, 'name' | 'email
   try {
     const resend = new Resend(process.env.RESEND_API_KEY as string);
     const { data: result, error } = await resend.emails.send({
-      from: 'info@fentimangreen.com', // Must be a verified sender/domain in Resend
-      to: ['info@fentimangreen.com'],
+      from: 'info@fentimangreen.co.uk', // Must be a verified sender/domain in Resend
+      to: ['info@fentimangreen.co.uk'],
       subject: 'New Quote Request Received',
       html: `
         <h1>New Quote Request</h1>
