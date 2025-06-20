@@ -52,11 +52,11 @@ export default function Navbar() {
 
   function isActive(linkPath: string) {
     if (linkPath === "/") {
-      return pathname === "/" && (currentHash === "" || currentHash === "#");
+      return pathname === "/" && (!currentHash || currentHash === "#");
     } else if (linkPath.startsWith("#")) {
       return pathname === "/" && currentHash === linkPath;
     } else {
-      return pathname === linkPath && currentHash === "";
+      return pathname === linkPath;
     }
   }
 
@@ -98,6 +98,7 @@ export default function Navbar() {
                 className={linkClasses("/")}
                 aria-current={isActive("/") ? "page" : undefined}
                 ref={homeRef}
+                onClick={() => setCurrentHash("")}
               >
                 Home
               </Link>
