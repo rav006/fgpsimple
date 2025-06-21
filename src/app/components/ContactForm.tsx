@@ -136,7 +136,7 @@ export default function ContactForm() {
           content="https://fentimangreen.co.uk/your-logo.png"
         />
       </Head>
-      <section className="w-full py-12 md:py-20 bg-gradient-to-br from-blue-50 via-white to-green-50 border-t border-gray-200">
+      <section className="w-full py-8 md:py-12 bg-gradient-to-br from-blue-50 via-white to-green-50 border-t border-gray-200">
         <div className="max-w-4xl w-full mx-auto bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
           {/* Contact Details Sidebar */}
           <div className="md:w-1/2 bg-gradient-to-br from-blue-100 via-white to-green-100 p-6 md:p-8 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-gray-200">
@@ -155,7 +155,7 @@ export default function ContactForm() {
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="w-6 h-6 text-green-600"
+                  className="w-6 h-6 text-green-600 shrink-0 min-w-[24px] min-h-[24px]"
                 >
                   <path
                     strokeLinecap="round"
@@ -177,7 +177,7 @@ export default function ContactForm() {
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-blue-600 shrink-0 min-w-[24px] min-h-[24px]"
                 >
                   <path
                     strokeLinecap="round"
@@ -199,7 +199,7 @@ export default function ContactForm() {
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="w-6 h-6 text-pink-500"
+                  className="w-6 h-6 text-pink-500 shrink-0 min-w-[24px] min-h-[24px]"
                 >
                   <path
                     strokeLinecap="round"
