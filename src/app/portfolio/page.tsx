@@ -239,26 +239,26 @@ export default function PortfolioPage() {
           content="https://fentimangreen.co.uk/portfolio-assets/garden-landscaping/Garden - After.jpeg"
         />
       </Head>
-      <main className="flex min-h-screen flex-col items-center pt-20 bg-gray-100">
+      <main className="flex min-h-screen flex-col items-center pt-20 bg-gray-100 overflow-x-hidden">
         {/* pt-20 for fixed navbar, bg-gray-100 for page background */}
         <Navbar />
-        <section className="w-full py-12 md:py-16 lg:py-20">
-          <div className="container mx-auto px-4 md:px-6">
-            <h1 className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800 mb-12">
+        <section className="w-full py-8 sm:py-12 md:py-16 lg:py-20">
+          <div className="container mx-auto px-2 sm:px-4 md:px-6">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tighter text-center text-gray-800 mb-8 sm:mb-12">
               Our Portfolio
             </h1>
-            <p className="mt-4 mb-12 max-w-[800px] mx-auto text-gray-600 md:text-xl text-center">
+            <p className="mt-2 mb-8 sm:mt-4 sm:mb-12 max-w-[800px] mx-auto text-gray-600 text-base sm:text-lg md:text-xl text-center">
               Discover a selection of our completed projects, showcasing our
               commitment to quality and excellence in building maintenance,
               cleaning, and specialized services.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {portfolioItems.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-shadow duration-300 hover:shadow-2xl"
+                  className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-shadow duration-300 hover:shadow-2xl min-h-[350px] sm:min-h-[400px]"
                 >
-                  <div className="relative w-full h-56">
+                  <div className="relative w-full h-48 sm:h-56 md:h-64">
                     {item.type === "image" && item.imageUrl && (
                       <Image
                         src={item.imageUrl}
@@ -266,14 +266,14 @@ export default function PortfolioPage() {
                         fill
                         style={{ objectFit: "cover" }}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="w-full h-full"
+                        className="w-full h-full rounded-t-xl"
                       />
                     )}
                     {item.type === "video" && item.videoUrl && (
                       <video
                         src={item.videoUrl}
                         controls
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover rounded-t-xl"
                         aria-label={`Video for ${item.title}`}
                       >
                         Your browser does not support the video tag.
@@ -281,14 +281,14 @@ export default function PortfolioPage() {
                     )}
                   </div>
 
-                  <div className="p-6 flex flex-col flex-grow">
-                    <span className="text-sm font-semibold text-indigo-600 mb-1">
+                  <div className="p-4 sm:p-6 flex flex-col flex-grow">
+                    <span className="text-xs sm:text-sm font-semibold text-indigo-600 mb-1">
                       {item.category}
                     </span>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
                       {item.title}
                     </h3>
-                    <p className="text-gray-700 text-sm flex-grow mb-4">
+                    <p className="text-gray-700 text-xs sm:text-sm flex-grow mb-2 sm:mb-4">
                       {item.description}
                     </p>
                   </div>
@@ -297,7 +297,7 @@ export default function PortfolioPage() {
             </div>
           </div>
         </section>
-        <footer className="w-full py-8 bg-gray-800 text-white text-center mt-auto">
+        <footer className="w-full py-6 sm:py-8 bg-gray-800 text-white text-center mt-auto text-xs sm:text-base">
           <p>
             &copy; {new Date().getFullYear()} Fentiman Green Ltd. All rights
             reserved.

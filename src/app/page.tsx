@@ -281,21 +281,16 @@ export default function Home() {
         <section
           id="contact"
           className="w-full py-12 md:py-24 lg:py-32 border-t bg-gray-50"
-          aria-labelledby="contact-heading" // Add aria-labelledby
+          aria-labelledby="contact-heading"
         >
           <div className="container mx-auto px-4 md:px-6">
             <h2
-              id="contact-heading" // Add id for aria-labelledby
+              id="contact-heading"
               className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800"
             >
               Get in Touch
             </h2>
-            <p className="mt-4 mb-12 max-w-[700px] mx-auto text-gray-600 md:text-xl text-center">
-              Have a question or need a quote? Fill out the form below, and our
-              team will get back to you as soon as possible.
-            </p>
-            <ContactForm />{" "}
-            {/* Replace placeholder with ContactForm component */}
+            <ContactForm />
           </div>
         </section>
         {/* Reviews Section - Added for user reviews */}
