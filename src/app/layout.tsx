@@ -31,10 +31,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Detect route for dark mode logic
+  const isHome = typeof window !== "undefined" && window.location.pathname === "/";
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ${!isHome ? 'bg-gray-900 text-white' : ''}`}
       >
         <Toaster position="bottom-right" toastOptions={{ duration: 5000 }} />{" "}
         {/* Add Toaster here */}

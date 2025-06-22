@@ -35,6 +35,21 @@ export const adminUsers = pgTable("admin_users", {
   createdAt: timestamp("created_at").default(sql`now()`),
 });
 
+export const invoices = pgTable("invoices", {
+  id: serial("id").primaryKey(),
+  invoiceNumber: varchar("invoice_number", { length: 32 }).notNull().unique(),
+  customerName: varchar("customer_name", { length: 255 }).notNull(),
+  cashierName: varchar("cashier_name", { length: 255 }),
+  items: text("items").notNull(), // JSON stringified array of items
+  discount: integer("discount"), // in cents or as percent, depending on logic
+  tax: integer("tax"), // in cents or as percent
+  total: integer("total").notNull(), // in cents
+  status: varchar("status", { length: 32 }).default('unpaid'),
+  createdAt: timestamp("created_at").default(sql`now()`),
+  updatedAt: timestamp("updated_at").default(sql`now()`),
+});
+
 export type ContactInquiry = InferSelectModel<typeof contactInquiries>;
 export type Review = InferSelectModel<typeof reviews>;
 export type AdminUser = InferSelectModel<typeof adminUsers>;
+export type Invoice = InferSelectModel<typeof invoices>;

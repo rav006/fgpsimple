@@ -9,6 +9,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { TextField, Paper, Typography } from "@mui/material";
 import ButtonMui from "@mui/material/Button";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button as MuiButton, TextField as MuiTextField } from "@mui/material";
 
 interface Inquiry {
   id: number;
@@ -28,11 +29,26 @@ interface Review {
   createdAt: string;
 }
 
+interface Invoice {
+  id: number;
+  invoiceNumber: string;
+  customerName: string;
+  cashierName?: string;
+  items: string; // JSON stringified array
+  discount?: number;
+  tax?: number;
+  total: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function UsurperAdminPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingReviews, setLoadingReviews] = useState(true);
+  const [loadingInvoices, setLoadingInvoices] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -42,6 +58,9 @@ export default function UsurperAdminPage() {
   const [editForm, setEditForm] = useState<Partial<Inquiry & Review>>({});
   const [editType, setEditType] = useState<"inquiry" | "review" | null>(null);
   const [editError, setEditError] = useState("");
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
+  const [editingInvoice, setEditingInvoice] = useState<Partial<Invoice> | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +95,12 @@ export default function UsurperAdminPage() {
       .then((data) => {
         setReviews(data.reviews || []);
         setLoadingReviews(false);
+      });
+    fetch("/api/invoices")
+      .then((res) => res.json())
+      .then((data) => {
+        setInvoices(data || []);
+        setLoadingInvoices(false);
       });
   }, [isAuthenticated]);
 
@@ -155,6 +180,55 @@ export default function UsurperAdminPage() {
     setEditingReview(null);
     setEditType(null);
     setEditError("");
+  };
+
+  const handleNewInvoice = () => {
+    setEditingInvoice({
+      invoiceNumber: "",
+      customerName: "",
+      cashierName: "",
+      items: "[]", // Fix: must be a string
+      discount: 0,
+      tax: 0,
+      total: 0,
+      status: "unpaid",
+    });
+    setInvoiceDialogOpen(true);
+  };
+  const handleEditInvoice = (invoice: Invoice) => {
+    setEditingInvoice({ ...invoice, items: JSON.parse(invoice.items) });
+    setInvoiceDialogOpen(true);
+  };
+  const handleDeleteInvoice = async (id: number) => {
+    if (!confirm("Delete this invoice?")) return;
+    const res = await fetch(`/api/invoices/${id}`, { method: "DELETE" });
+    if (res.ok) setInvoices(invoices.filter((i) => i.id !== id));
+  };
+  const handleInvoiceDialogClose = () => {
+    setInvoiceDialogOpen(false);
+    setEditingInvoice(null);
+  };
+  const handleInvoiceDialogSave = async () => {
+    if (!editingInvoice) return;
+    const isNew = !editingInvoice.id;
+    const payload = {
+      ...editingInvoice,
+      items: JSON.stringify(editingInvoice.items),
+    };
+    const res = await fetch(
+      isNew ? "/api/invoices" : `/api/invoices/${editingInvoice.id}`,
+      {
+        method: isNew ? "POST" : "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    if (res.ok) {
+      const saved = await res.json();
+      if (isNew) setInvoices([saved, ...invoices]);
+      else setInvoices(invoices.map((i) => (i.id === saved.id ? saved : i)));
+      handleInvoiceDialogClose();
+    }
   };
 
   const editInquiryBodyTemplate = (rowData: Inquiry) => (
@@ -315,6 +389,72 @@ export default function UsurperAdminPage() {
             style={{ width: "80px" }}
           />
         </DataTable>
+        <h2 className="p-mt-5">Invoices</h2>
+        <ButtonMui variant="contained" color="primary" onClick={handleNewInvoice} sx={{ mb: 2 }}>
+          New Invoice
+        </ButtonMui>
+        <DataTable
+          value={invoices}
+          loading={loadingInvoices}
+          paginator
+          rows={10}
+          responsiveLayout="scroll"
+          dataKey="id"
+          emptyMessage="No invoices found."
+        >
+          <Column field="id" header="ID" style={{ width: "60px" }} />
+          <Column field="invoiceNumber" header="Number" />
+          <Column field="customerName" header="Customer" />
+          <Column field="cashierName" header="Cashier" />
+          <Column field="total" header="Total (cents)" />
+          <Column field="status" header="Status" />
+          <Column
+            field="createdAt"
+            header="Created"
+            body={(rowData) => new Date(rowData.createdAt).toLocaleString()}
+          />
+          <Column
+            body={(rowData) => (
+              <>
+                <Button icon="pi pi-pencil" className="p-button-text" onClick={() => handleEditInvoice(rowData)} tooltip="Edit" />
+                <Button icon="pi pi-trash" className="p-button-danger p-button-text" onClick={() => handleDeleteInvoice(rowData.id)} tooltip="Delete" />
+              </>
+            )}
+            header="Actions"
+            style={{ width: "120px" }}
+          />
+        </DataTable>
+        <Dialog open={invoiceDialogOpen} onClose={handleInvoiceDialogClose} maxWidth="md" fullWidth>
+          <DialogTitle>{editingInvoice?.id ? "Edit Invoice" : "New Invoice"}</DialogTitle>
+          <DialogContent>
+            <MuiTextField
+              label="Invoice Number"
+              value={editingInvoice?.invoiceNumber || ""}
+              onChange={(e) => setEditingInvoice({ ...editingInvoice, invoiceNumber: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+            <MuiTextField
+              label="Customer Name"
+              value={editingInvoice?.customerName || ""}
+              onChange={(e) => setEditingInvoice({ ...editingInvoice, customerName: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+            <MuiTextField
+              label="Cashier Name"
+              value={editingInvoice?.cashierName || ""}
+              onChange={(e) => setEditingInvoice({ ...editingInvoice, cashierName: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+            {/* Items, discount, tax, total, status fields can be added here as needed */}
+          </DialogContent>
+          <DialogActions>
+            <MuiButton onClick={handleInvoiceDialogClose} color="secondary">Cancel</MuiButton>
+            <MuiButton onClick={handleInvoiceDialogSave} color="primary">Save</MuiButton>
+          </DialogActions>
+        </Dialog>
         {(editingInquiry || editingReview) && (
           <Paper elevation={4} sx={{ maxWidth: 400, mx: "auto", mt: 4, p: 3 }}>
             <Typography variant="h6" gutterBottom>
