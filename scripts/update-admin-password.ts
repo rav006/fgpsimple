@@ -13,7 +13,7 @@ const passwordHash = '$2b$10$zbJ3C/WvGw3BHMUdJPxc5OFS4LBtGNP1.tQncHLf8ZCCURooHN/
       'UPDATE admin_users SET password_hash = $1 WHERE username = $2 RETURNING *',
       [passwordHash, username]
     );
-    if (res.rowCount > 0) {
+    if (res.rowCount && res.rowCount > 0) {
       console.log('Password hash updated for', username);
     } else {
       console.log('No user found with username', username);
