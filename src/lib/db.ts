@@ -1,21 +1,12 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-import * as schema from "./schema";
+import { drizzle } from 'drizzle-orm/neon-http';
+import { neon, neonConfig } from '@neondatabase/serverless';
+import * as schema from './schema';
 
-let db: ReturnType<typeof drizzle> | null = null;
-
-export function getDb() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL environment variable is not set or empty");
-  }
-
-  if (!db) {
-    const pool = new Pool({
-      connectionString,
-    });
-    db = drizzle(pool, { schema });
-  }
-
-  return db;
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL is not set in .env.local');
 }
+
+neonConfig.fetchConnectionCache = true;
+
+const sql = neon(process.env.DATABASE_URL);
+export const db = drizzle(sql, { schema });

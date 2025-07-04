@@ -1,6 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
-import { contactInquiries } from "@/lib/schema";
 import { z } from "zod";
 import { Resend } from "resend";
 import fetch from "node-fetch";
@@ -45,6 +43,12 @@ async function sendQuoteRequestEmail(
     });
     // Error is intentionally not thrown to avoid blocking the main flow
   } catch {}
+}
+
+export async function GET() {
+  return new Response(JSON.stringify({ message: "Not implemented" }), {
+    status: 501,
+  });
 }
 
 export async function POST(request: NextRequest) {
@@ -104,25 +108,13 @@ export async function POST(request: NextRequest) {
 
     const { name, email, phone, message, isQuoteRequest } = validation.data;
 
-    // Save to database
-    const [newInquiry] = await getDb()
-      .insert(contactInquiries)
-      .values({
-        name,
-        email,
-        phone: phone || null,
-        message,
-        isQuoteRequest,
-      })
-      .returning({ id: contactInquiries.id });
-
-    if (isQuoteRequest && newInquiry) {
+    if (isQuoteRequest) {
       // Send email notification asynchronously (don't await if not critical for response)
       sendQuoteRequestEmail({ name, email, phone, message }).catch(() => {});
     }
 
     return NextResponse.json(
-      { message: "Inquiry submitted successfully!", inquiryId: newInquiry?.id },
+      { message: "Inquiry submitted successfully!" },
       { status: 201 },
     );
   } catch {

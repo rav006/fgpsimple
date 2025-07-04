@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Navbar from "./components/Navbar";
 import ContactForm from "./components/ContactForm"; // Import ContactForm
 import Quote from "./components/Quote";
 import Reviews from "./components/Reviews"; // Import Reviews component
@@ -178,91 +177,87 @@ export default function Home() {
           content="https://fentimangreen.co.uk/your-logo.png"
         />
       </Head>
-      <main className="flex min-h-screen flex-col items-center pt-20">
-        {" "}
-        {/* Added pt-20 for fixed navbar offset */}
-        <Navbar />
-        {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-r from-green-500 to-blue-500 text-white">
-          <div className="container mx-auto px-4 md:px-6 text-center">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none">
-              Fentiman Green Ltd
-            </h1>
-            <p className="mt-4 max-w-[700px] mx-auto text-gray-200 md:text-xl">
-              Your trusted partner for comprehensive building maintenance and
-              pristine cleaning services. We ensure your property is always at
-              its best.
-            </p>
-            <div className="mt-8">
-              <a
-                href="#contact"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-gradient-to-b from-white to-gray-200 px-8 text-sm font-medium text-green-600 shadow-lg border border-gray-300 transition-all duration-150 hover:translate-y-0.5 hover:shadow-xl active:translate-y-1 active:shadow-inner active:bg-gradient-to-b active:from-gray-300 active:to-gray-500 active:text-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:pointer-events-none disabled:opacity-50"
-              >
-                Get a Quote
-              </a>
-            </div>
-          </div>
-        </section>
-        {/* Quote Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
-          <div className="container mx-auto px-4 md:px-6">
-            <Quote
-              text="The only way to do great work is to love what you do."
-              author="Steve Jobs"
-            />
-          </div>
-        </section>
-        {/* Services Overview Section - Placeholder */}
-        <section
-          id="services"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gray-50" // Changed background for better card contrast
-          aria-labelledby="services-heading" // Add aria-labelledby
-        >
-          <div className="container mx-auto px-4 md:px-6">
-            <h2
-              id="services-heading" // Add id for aria-labelledby
-              className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800"
+      {/* Hero Section */}
+      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-r from-green-500 to-blue-500 text-white">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none">
+            Fentiman Green Ltd
+          </h1>
+          <p className="mt-4 max-w-[700px] mx-auto text-gray-200 md:text-xl">
+            Your trusted partner for comprehensive building maintenance and
+            pristine cleaning services. We ensure your property is always at
+            its best.
+          </p>
+          <div className="mt-8">
+            <a
+              href="#contact"
+              className="inline-flex h-10 items-center justify-center rounded-md bg-gradient-to-b from-white to-gray-200 px-8 text-sm font-medium text-green-600 shadow-lg border border-gray-300 transition-all duration-150 hover:translate-y-0.5 hover:shadow-xl active:translate-y-1 active:shadow-inner active:bg-gradient-to-b active:from-gray-300 active:to-gray-500 active:text-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:pointer-events-none disabled:opacity-50"
             >
-              Our Services
-            </h2>
-            <p className="mt-4 mb-12 max-w-[800px] mx-auto text-gray-600 md:text-xl text-center">
-              Fentiman Green Ltd offers a comprehensive suite of maintenance and
-              cleaning services designed to keep your property operating
-              smoothly and looking its best. Explore our offerings below.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {services.map((service) => (
-                <div
-                  key={service.id}
-                  className={`flex flex-col ${service.bgColor} p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300`}
-                  role="region" // Add role="region"
-                  aria-labelledby={`service-title-${service.id}`} // Add aria-labelledby for the card
-                >
-                  <div className="flex items-center mb-4">
-                    {service.icon && (
-                      <div
-                        className={`p-3 rounded-full ${service.iconBgColor} mr-4 flex items-center justify-center w-12 h-12`}
-                      >
-                        {" "}
-                        {/* Ensured fixed size for icon container */}
-                        <FontAwesomeIcon
-                          icon={service.icon}
-                          className={`${service.textColor} text-2xl`}
-                          aria-hidden="true" // Add aria-hidden
-                        />
-                      </div>
-                    )}
-                    <h3
-                      id={`service-title-${service.id}`} // Add id for card's aria-labelledby
-                      className={`text-2xl font-semibold ${service.textColor}`}
+              Get a Quote
+            </a>
+          </div>
+        </div>
+      </section>
+      {/* Quote Section */}
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+        <div className="container mx-auto px-4 md:px-6">
+          <Quote
+            text="The only way to do great work is to love what you do."
+            author="Steve Jobs"
+          />
+        </div>
+      </section>
+      {/* Services Overview Section - Placeholder */}
+      <section
+        id="services"
+        className="w-full py-12 md:py-24 lg:py-32 bg-gray-50" // Changed background for better card contrast
+        aria-labelledby="services-heading" // Add aria-labelledby
+      >
+        <div className="container mx-auto px-4 md:px-6">
+          <h2
+            id="services-heading" // Add id for aria-labelledby
+            className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800"
+          >
+            Our Services
+          </h2>
+          <p className="mt-4 mb-12 max-w-[800px] mx-auto text-gray-600 md:text-xl text-center">
+            Fentiman Green Ltd offers a comprehensive suite of maintenance and
+            cleaning services designed to keep your property operating
+            smoothly and looking its best. Explore our offerings below.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service) => (
+              <div
+                key={service.id}
+                className={`flex flex-col ${service.bgColor} p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300`}
+                role="region" // Add role="region"
+                aria-labelledby={`service-title-${service.id}`} // Add aria-labelledby for the card
+              >
+                <div className="flex items-center mb-4">
+                  {service.icon && (
+                    <div
+                      className={`p-3 rounded-full ${service.iconBgColor} mr-4 flex items-center justify-center w-12 h-12`}
                     >
-                      {service.title}
-                    </h3>
-                  </div>
-                  <p className="text-gray-700 flex-grow">
-                    {service.description}
-                  </p>
-                  {/* Optional: Add a 'Learn More' button if dedicated service pages exist 
+                      {" "}
+                      {/* Ensured fixed size for icon container */}
+                      <FontAwesomeIcon
+                        icon={service.icon}
+                        className={`${service.textColor} text-2xl`}
+                        aria-hidden="true" // Add aria-hidden
+                      />
+                    </div>
+                  )}
+                  <h3
+                    id={`service-title-${service.id}`} // Add id for card's aria-labelledby
+                    className={`text-2xl font-semibold ${service.textColor}`}
+                  >
+                    {service.title}
+                  </h3>
+                </div>
+                <p className="text-gray-700 flex-grow">
+                  {service.description}
+                </p>
+                {/* Optional: Add a 'Learn More' button if dedicated service pages exist 
                   {service.detailsLink && (
                     <a 
                       href={service.detailsLink} 
@@ -272,41 +267,40 @@ export default function Home() {
                     </a>
                   )}
                   */}
-                </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        </section>
-        {/* Contact Form Section - Placeholder */}
-        <section
-          id="contact"
-          className="w-full py-12 md:py-24 lg:py-32 border-t bg-gray-50"
-          aria-labelledby="contact-heading"
-        >
-          <div className="container mx-auto px-4 md:px-6">
-            <h2
-              id="contact-heading"
-              className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800"
-            >
-              Get in Touch
-            </h2>
-            <ContactForm />
-          </div>
-        </section>
-        {/* Reviews Section - Added for user reviews */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50 border-t">
-          <div className="container mx-auto px-4 md:px-6">
-            <Reviews />
-          </div>
-        </section>
-        {/* Footer - Placeholder */}
-        <footer className="w-full py-8 bg-gray-800 text-white text-center">
-          <p>
-            &copy; {new Date().getFullYear()} Fentiman Green Ltd. All rights
-            reserved.
-          </p>
-        </footer>
-      </main>
+        </div>
+      </section>
+      {/* Contact Form Section - Placeholder */}
+      <section
+        id="contact"
+        className="w-full py-12 md:py-24 lg:py-32 border-t bg-gray-50"
+        aria-labelledby="contact-heading"
+      >
+        <div className="container mx-auto px-4 md:px-6">
+          <h2
+            id="contact-heading"
+            className="text-3xl font-bold tracking-tighter text-center sm:text-4xl md:text-5xl text-gray-800"
+          >
+            Get in Touch
+          </h2>
+          <ContactForm />
+        </div>
+      </section>
+      {/* Reviews Section - Added for user reviews */}
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-50 border-t">
+        <div className="container mx-auto px-4 md:px-6">
+          <Reviews />
+        </div>
+      </section>
+      {/* Footer - Placeholder */}
+      <footer className="w-full py-8 bg-gray-800 text-white text-center">
+        <p>
+          &copy; {new Date().getFullYear()} Fentiman Green Ltd. All rights
+          reserved.
+        </p>
+      </footer>
     </>
   );
 }
